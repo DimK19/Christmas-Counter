@@ -11,12 +11,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
-public class ChristmasCounter implements ActionListener
+public class ChristmasCounter
 {
-	
-	public int month = 1;
-	public int day = 1;
-	public int year = 1980;
+	int month = 1, day = 1, year = 1980;
 	Color CRED = new Color(128, 0, 0);
 	Color CGREEN = new Color(0, 64, 0);
 	String[] months = { "January", "February", "March", "April", "May", "June", "July", "August", "September",
@@ -31,25 +28,23 @@ public class ChristmasCounter implements ActionListener
 			"2044", "2045", "2046", "2047", "2048", "2049", "2050", "2051", "2052", "2053", "2054", "2055", "2056",
 			"2057", "2058", "2059", "2060", "2061", "2062", "2063", "2064", "2065", "2066", "2067", "2068", "2069",
 			"2070", "2071", "2072", "2073", "2074", "2075", "2076", "2077", "2078", "2079", "2080" };
-	public JLabel instructions;
-	public JLabel answer;
-	public JLabel imglab;
-	JComboBox<String> monthBox;
-	JComboBox<String> dayBox;
-	JComboBox<String> yearBox;
-	ImageIcon img1;
+	JLabel instructionLabel, answerLabel, imageLabel;
+	JComboBox<String> monthBox, dayBox, yearBox;
+	ImageIcon image;
+	JFrame frame;
+	JButton finalOKButton;
 
 	ChristmasCounter()
 	{
-		JFrame jfrm = new JFrame("Christmas Counter");
+		this.frame = new JFrame("Christmas Counter");
 
-		jfrm.setLayout(new FlowLayout());
+		this.frame.setLayout(new FlowLayout());
 
-		jfrm.setSize(300, 250);
+		this.frame.setSize(300, 250);
 
-		jfrm.setDefaultCloseOperation(3);
+		this.frame.setDefaultCloseOperation(3);
 
-		jfrm.getContentPane().setBackground(this.CGREEN);
+		this.frame.getContentPane().setBackground(this.CGREEN);
 
 		this.monthBox = new JComboBox<String>(this.months);
 		this.monthBox.setSelectedIndex(0);
@@ -60,68 +55,65 @@ public class ChristmasCounter implements ActionListener
 		this.dayBox = new JComboBox<String>(this.days);
 		this.dayBox.setSelectedIndex(0);
 
-		this.instructions = new JLabel("       Select date and press OK       ");
-		this.instructions.setFont(this.instructions.getFont().deriveFont(14.0F));
-		this.instructions.setForeground(Color.white);
+		this.instructionLabel = new JLabel("       Select date and press OK       ");
+		this.instructionLabel.setFont(this.instructionLabel.getFont().deriveFont(14.0F));
+		this.instructionLabel.setForeground(Color.white);
 
-		this.answer = new JLabel("              Days Until Christmas:                  ");
-		this.answer.setFont(this.answer.getFont().deriveFont(13.0F));
-		this.answer.setForeground(Color.white);
+		this.answerLabel = new JLabel("              Days Until Christmas:                  ");
+		this.answerLabel.setFont(this.answerLabel.getFont().deriveFont(13.0F));
+		this.answerLabel.setForeground(Color.white);
 
-		JButton finalOk = new JButton("  OK  ");
-		finalOk.setFocusable(false);
-		finalOk.setForeground(Color.white);
-		finalOk.setBackground(this.CRED);
+		this.finalOKButton = new JButton("  OK  ");
+		this.finalOKButton.setFocusable(false);
+		this.finalOKButton.setForeground(Color.white);
+		this.finalOKButton.setBackground(this.CRED);
 
-		this.monthBox.addActionListener(new monthSelected());
-		this.dayBox.addActionListener(new daySelected());
-		this.yearBox.addActionListener(new yearSelected());
-		finalOk.addActionListener(this);
+		this.monthBox.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e)
+		    {
+		        month = (monthBox.getSelectedIndex() + 1);
+		    }
+		});
+		
+		this.dayBox.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e)
+	        {
+	            day = (dayBox.getSelectedIndex() + 1);
+	        }
+		});
+		
+		this.yearBox.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e)
+		    {
+		        year = (yearBox.getSelectedIndex() + 1980);
+		    }
+		});
+		
+		// finalOKButton.addActionListener(this);
+		// would work if actionPerformed were defined as a class method
+		
+		this.finalOKButton.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e)
+		    {
+		        Calculator c = new Calculator();
+		        answerLabel.setText(c.getAnswer(month, day, year));
+		    }
+		});
 
-		this.img1 = new ImageIcon(getClass().getResource("/images/snow.png"));
-		this.imglab = new JLabel(this.img1);
+		this.image = new ImageIcon(getClass().getResource("/images/snow.png"));
+		this.imageLabel = new JLabel(this.image);
 
-		jfrm.setLocationRelativeTo(null);
+		frame.setLocationRelativeTo(null);
 
-		jfrm.add(this.instructions);
-		jfrm.add(this.monthBox);
-		jfrm.add(this.dayBox);
-		jfrm.add(this.yearBox);
-		jfrm.add(finalOk);
-		jfrm.add(this.answer);
-		jfrm.add(this.imglab);
+		frame.add(this.instructionLabel);
+		frame.add(this.monthBox);
+		frame.add(this.dayBox);
+		frame.add(this.yearBox);
+		frame.add(this.finalOKButton);
+		frame.add(this.answerLabel);
+		frame.add(this.imageLabel);
 
-		jfrm.setVisible(true);
-	}
-
-	public class monthSelected implements ActionListener
-	{
-		public void actionPerformed(ActionEvent e1)
-		{
-			ChristmasCounter.this.month = (ChristmasCounter.this.monthBox.getSelectedIndex() + 1);
-		}
-	}
-
-	public class daySelected implements ActionListener
-	{
-		public void actionPerformed(ActionEvent e2)
-		{
-			ChristmasCounter.this.day = (ChristmasCounter.this.dayBox.getSelectedIndex() + 1);
-		}
-	}
-
-	public class yearSelected implements ActionListener
-	{
-		public void actionPerformed(ActionEvent e3)
-		{
-			ChristmasCounter.this.year = (ChristmasCounter.this.yearBox.getSelectedIndex() + 1980);
-		}
-	}
-
-	public void actionPerformed(ActionEvent fe)
-	{
-		Calculator c = new Calculator();
-		this.answer.setText(c.getAnswer(this.month, this.day, this.year));
+		frame.setVisible(true);
 	}
 
 	public static void main(String[] args)
